@@ -1,4 +1,3 @@
-import datetime
 import json
 import os
 import queue
@@ -7,21 +6,14 @@ import struct
 import subprocess
 import sys
 import time
-from ctypes import POINTER, cast
 
 import openai
-from openai import error
 import pvporcupine
 import simpleaudio as sa
 import vosk
 import yaml
-from comtypes import CLSCTX_ALL
 from fuzzywuzzy import fuzz
 from pvrecorder import PvRecorder
-from pycaw.pycaw import (
-    AudioUtilities,
-    IAudioEndpointVolume
-)
 from rich import print
 
 import config
@@ -70,15 +62,9 @@ def gpt_answer():
             top_p=1,
             stop=None
         )
-    except (error.TryAgain, error.ServiceUnavailableError):
-        return "ChatGPT перегружен!"
     except openai.OpenAIError as ex:
-        # если ошибка - это макс длина контекста, то возвращаем ответ с очищенным контекстом
-        if ex.code == "context_length_exceeded":
-            message_log = [system_message, message_log[-1]]
-            return gpt_answer()
-        else:
-            return "OpenAI токен не рабочий."
+        print(f"openai error: {ex}")
+        return gpt_answer()
 
     # Find the first response from the chatbot that has text in it (some responses may not have text)
     for choice in response.choices:
@@ -89,12 +75,11 @@ def gpt_answer():
     return response.choices[0].message.content
 
 
-# play(f'{CDIR}\\sound\\ok{random.choice([1, 2, 3, 4])}.wav')
 def play(phrase, wait_done=True):
     global recorder
-    filename = f"{CDIR}\\sound\\"
+    filename = f"{CDIR}/sound/"
 
-    if phrase == "greet":  # for py 3.8
+    if phrase == "greet":
         filename += f"greet{random.choice([1, 2, 3])}.wav"
     elif phrase == "ok":
         filename += f"ok{random.choice([1, 2, 3])}.wav"
@@ -119,9 +104,6 @@ def play(phrase, wait_done=True):
 
     if wait_done:
         play_obj.wait_done()
-        # time.sleep((len(wave_obj.audio_data) / wave_obj.sample_rate) + 0.5)
-        # print("END")
-        # time.sleep(0.5)
         recorder.start()
 
 
@@ -142,8 +124,6 @@ def va_respond(voice: str):
     if len(cmd['cmd'].strip()) <= 0:
         return False
     elif cmd['percent'] < 70 or cmd['cmd'] not in VA_CMD_LIST.keys():
-        # play("not_found")
-        # tts.va_speak("Что?")
         if fuzz.ratio(voice.join(voice.split()[:1]).strip(), "скажи") > 75:
 
             message_log.append({"role": "user", "content": voice})
@@ -227,22 +207,6 @@ def execute_cmd(cmd: str, voice: str):
         time.sleep(0.2)
         play("ok")
 
-    elif cmd == 'sound_off':
-        play("ok", True)
-
-        devices = AudioUtilities.GetSpeakers()
-        interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-        volume = cast(interface, POINTER(IAudioEndpointVolume))
-        volume.SetMute(1, None)
-
-    elif cmd == 'sound_on':
-        devices = AudioUtilities.GetSpeakers()
-        interface = devices.Activate(IAudioEndpointVolume._iid_, CLSCTX_ALL, None)
-        volume = cast(interface, POINTER(IAudioEndpointVolume))
-        volume.SetMute(0, None)
-
-        play("ok")
-
     elif cmd == 'thanks':
         play("thanks")
 
@@ -298,7 +262,7 @@ while True:
             recorder.stop()
             play("greet", True)
             print("Yes, sir.")
-            recorder.start()  # prevent self recording
+            recorder.start()  # prevent self-recording
             ltc = time.time()
 
         while time.time() - ltc <= 10:

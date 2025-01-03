@@ -1,4 +1,4 @@
-# Kesha v3.0 very early (aka Jarvis update)
+# Jarvis v3.0
 Simple Voice Assistant made as an experiment using [Silero](https://github.com/snakers4/silero-models) & [Vosk](https://pypi.org/project/vosk/).
 <br>Later on [Picovoice Porcupine Wake Word Detection](https://picovoice.ai/platform/porcupine/) & [ChatGPT](https://chat.openai.com/) was added.
 
@@ -27,4 +27,7 @@ I was using Python `3.8.3`, but it should work on any newer version.
 - Указание из списка или по имени будет реализовано позже.
 
 # Author
-(2022) Abraham Tugalov
+(2024) Vladimir Zaitsev
+
+# Forked by 
+[Abraham Tugalov](https://github.com/Priler/jarvis)

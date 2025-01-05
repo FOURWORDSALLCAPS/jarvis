@@ -2,14 +2,23 @@
 Simple Voice Assistant made as an experiment using [Silero](https://github.com/snakers4/silero-models) & [Vosk](https://pypi.org/project/vosk/).
 <br>Later on [Picovoice Porcupine Wake Word Detection](https://picovoice.ai/platform/porcupine/) & [ChatGPT](https://chat.openai.com/) was added.
 
-![image](https://i.pinimg.com/originals/63/e9/b7/63e9b72b983793f64bffc07fd14a0e62.jpg)
-
-`The code has NOT been polished and is provided "as is". There are a lot of code that are redundant and there are tons of improvements that can be made.`
+# OS
+The code works strictly under MacOS.
+The original is written in Rust and works under Windows.
 
 # Installation
-First, install the requirements, the `requirements.txt` file is just an output of `pip freeze` from my test venv 'k.<br>
-Second, check `config.py` and set required values (api key, device index).<br>
-Next, run the `main.py` script and Voilà, as simple as that.<br><br>
+Install dependencies into the virtual environment
+```sh
+pip install -r requirements.txt
+```
+
+Create a `.env` file in the root of the project, similar to the `example.env`
+
+Run script
+
+```sh
+python main.py
+```
 
 And don't forget to put models of Vosk to main folder.<br>
 You can get the latest from the [official website.](https://alphacephei.com/vosk/models)
@@ -20,7 +29,7 @@ You can get the latest from the [official website.](https://alphacephei.com/vosk
 I was using Python `3.8.3`.
 
 # Author
-(2024) Vladimir Zaitsev
+(2025) Vladimir Zaitsev
 
-# Forked by 
+# Forked from 
 [Abraham Tugalov](https://github.com/Priler/jarvis)

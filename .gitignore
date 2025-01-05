@@ -2,7 +2,7 @@ media/
 docker-compose.override.yml
 .idea/
 __pycache__
-.env
+app/src/.env
 .venv
 venv
 tmp*

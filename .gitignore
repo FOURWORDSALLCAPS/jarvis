@@ -1,9 +1,10 @@
 media/
-docker-compose.override.yml
 .idea/
 __pycache__
-app/src/.env
+.env
 .venv
 venv
 tmp*
 .DS_Store
+*.yaml
+*.scpt

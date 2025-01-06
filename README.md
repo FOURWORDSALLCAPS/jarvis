@@ -26,7 +26,7 @@ You can get the latest from the [official website.](https://alphacephei.com/vosk
 <br>p.s. If you don't understand how to install or where to put the Vosk model, I've made a [screenshot](https://i.imgur.com/N3bu2lC.png) for you.
 
 # Python version
-I was using Python `3.8.3`.
+I was using Python `3.9.10`.
 
 # Author
 (2025) Vladimir Zaitsev

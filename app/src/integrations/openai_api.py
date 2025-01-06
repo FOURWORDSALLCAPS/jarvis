@@ -1,30 +1,32 @@
-import openai
+import re
+
 import config
+from openai import OpenAI, OpenAIError
 
 
-system_message = {"role": "system", "content": "Ты голосовой ассистент из железного человека."}
-message_log = [system_message]
-openai.api_key = config.OPENAI_TOKEN
-
-
-def gpt_answer():
-    model_engine = "gpt-3.5-turbo"
-    max_tokens = 256
+def gpt_answer(voice):
+    client = OpenAI(
+        api_key=config.OPENAI_TOKEN,
+    )
     try:
-        response = openai.ChatCompletion.create(
-            model=model_engine,
-            messages=message_log,
-            max_tokens=max_tokens,
-            temperature=0.7,
-            top_p=1,
-            stop=None
+        response = client.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": voice,
+                }
+            ],
+            model="gpt-4o-mini",
         )
-    except openai.OpenAIError as ex:
-        print(f"openai error: {ex}")
-        return gpt_answer()
+    except OpenAIError as error:
+        response = "Непредвиденная ошибка"
+        print(f"{error}")
+        error_message = (re.search(r"'message': '([^:']*)", str(error))).group(1)
+        if error_message.startswith("Incorrect API key provided"):
+            response = "Предоставлен неверный ключ API"
 
-    for choice in response.choices:
-        if "text" in choice:
-            return choice.text
+        if error_message.startswith("Country, region, or territory not supported"):
+            response = "Страна, регион или территория не поддерживается"
 
+        return response
     return response.choices[0].message.content
